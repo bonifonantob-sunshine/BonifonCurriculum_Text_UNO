@@ -1,5 +1,5 @@
 #define SENSOR_PIN    A0
-#define BUZZER_PIN    8
+#define BUZZER_PIN    9
 #define WARN_THRESHOLD    30   
 #define DANGER_THRESHOLD  60  
 #define TONE_WARNING   500  
