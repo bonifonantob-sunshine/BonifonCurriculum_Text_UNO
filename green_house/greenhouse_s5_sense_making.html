@@ -1,0 +1,132 @@
+
+<style>
+.w{padding:1.5rem 0}.badge{display:inline-block;font-size:12px;padding:4px 12px;border-radius:var(--border-radius-md);margin-bottom:1rem;background:var(--color-background-success);color:var(--color-text-success)}.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);margin-bottom:1rem}h1{font-size:22px;font-weight:500;margin:0 0 .4rem;color:var(--color-text-primary)}.sub{font-size:15px;color:var(--color-text-secondary);margin:0 0 1.5rem;line-height:1.6}hr{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0}.lbl{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin:0 0 10px}.sim{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem}.sliders{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:1.25rem}.srow{display:flex;flex-direction:column;gap:6px}.slabel{font-size:12px;color:var(--color-text-secondary)}.sval{font-size:13px;font-weight:500;color:var(--color-text-primary)}.lcd-frame{background:#1a3a2a;border-radius:8px;padding:10px 14px;margin-bottom:1rem}.lcd-screen{background:#2a6a50;border-radius:4px;padding:7px 10px;font-family:monospace}.lcd-row{display:flex;gap:2px;margin-bottom:3px}.lcd-row:last-child{margin-bottom:0}.lcc{width:19px;height:22px;background:#2a5a44;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#3a7a6a;font-family:monospace;transition:color .15s}.lcc.lit{color:#c0fce8}.scene-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}.mc-list{display:flex;flex-direction:column;gap:10px}.mc-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}.mc-w{background:var(--color-background-danger);padding:.75rem 1rem;font-size:13px;color:var(--color-text-danger)}.mc-r{background:var(--color-background-secondary);padding:.75rem 1rem;font-size:13px;color:var(--color-text-primary);line-height:1.5}.mc-lbl{font-size:11px;font-weight:500;margin:0 0 3px}.mc-txt{margin:0;line-height:1.5}
+</style>
+<div class="w">
+  <span class="badge">Section 5 — Sense making</span>
+  <div class="pill"><i class="ti ti-clock" aria-hidden="true" style="font-size:13px"></i>10 mins</div>
+  <h1>Adjust all three readings — watch the screens cycle and the buzzer respond</h1>
+  <p class="sub">Set temperature, humidity, and air quality with the sliders. Click "show next screen" to manually step through the LCD cycle exactly as your loop() does, and watch the buzzer LED react instantly to air quality regardless of which screen is showing.</p>
+  <p class="lbl">Interactive greenhouse monitor simulator</p>
+  <div class="sim">
+    <div class="sliders">
+      <div class="srow">
+        <span class="slabel"><i class="ti ti-temperature" aria-hidden="true" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>Temperature</span>
+        <input type="range" min="0" max="50" value="28" id="tslider" step="1" oninput="updateSim()">
+        <span class="sval" id="tshow">28 °C</span>
+      </div>
+      <div class="srow">
+        <span class="slabel"><i class="ti ti-droplet" aria-hidden="true" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>Humidity</span>
+        <input type="range" min="20" max="99" value="60" id="hslider" step="1" oninput="updateSim()">
+        <span class="sval" id="hshow">60 %</span>
+      </div>
+      <div class="srow">
+        <span class="slabel"><i class="ti ti-wind" aria-hidden="true" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>Air quality</span>
+        <input type="range" min="0" max="100" value="75" id="aslider" step="1" oninput="updateSim()">
+        <span class="sval" id="ashow">75 %</span>
+      </div>
+    </div>
+
+    <div class="lcd-frame">
+      <div class="lcd-screen">
+        <div class="lcd-row" id="lrow0"></div>
+        <div class="lcd-row" id="lrow1"></div>
+      </div>
+    </div>
+
+    <div class="scene-btns">
+      <button onclick="nextScreen()"><i class="ti ti-refresh" aria-hidden="true" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>Show next screen</button>
+      <span style="font-size:12px;color:var(--color-text-secondary);align-self:center" id="screen-label">Currently showing: Climate screen</span>
+    </div>
+
+    <div style="display:flex;gap:14px;align-items:center;margin-bottom:.5rem">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+        <div id="buzz-led" style="width:32px;height:32px;border-radius:50%;background:var(--color-background-tertiary);border:1.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;transition:background .15s">
+          <i class="ti ti-bell" aria-hidden="true" style="font-size:14px;color:var(--color-text-tertiary)" id="buzz-icon"></i>
+        </div>
+        <span style="font-size:11px;color:var(--color-text-secondary)">Buzzer</span>
+      </div>
+      <p id="buzz-state" style="font-size:13px;color:var(--color-text-secondary);margin:0">Air quality OK — buzzer silent</p>
+    </div>
+  </div>
+
+  <hr>
+  <p class="lbl">4 common misconceptions</p>
+  <div class="mc-list">
+    <div class="mc-card">
+      <div class="mc-w"><p class="mc-lbl">✗ Misconception</p><p class="mc-txt">"The buzzer should only sound while screen 2 (air quality) is showing — otherwise it doesn't make sense."</p></div>
+      <div class="mc-r"><p class="mc-lbl" style="color:var(--color-text-success)">✓ Reality</p><p class="mc-txt">The buzzer check runs once per loop, before either screen displays — it's completely decoupled from what's currently on the LCD. A real alarm system should never depend on which screen a display happens to be showing; safety logic and display logic are deliberately kept separate.</p></div>
+    </div>
+    <div class="mc-card">
+      <div class="mc-w"><p class="mc-lbl">✗ Misconception</p><p class="mc-txt">"I should make a bigger LCD message that shows all three values on one screen using smaller text."</p></div>
+      <div class="mc-r"><p class="mc-lbl" style="color:var(--color-text-success)">✓ Reality</p><p class="mc-txt">Character LCDs cannot resize text — every character occupies a fixed 5×8 pixel cell. The only way to fit more information is either a bigger physical display (20×4) or, as this project does, cycling through multiple screens over time. Both are valid; cycling is far cheaper.</p></div>
+    </div>
+    <div class="mc-card">
+      <div class="mc-w"><p class="mc-lbl">✗ Misconception</p><p class="mc-txt">"Adding a buzzer alarm for temperature and humidity too would make the system more thorough."</p></div>
+      <div class="mc-r"><p class="mc-lbl" style="color:var(--color-text-success)">✓ Reality</p><p class="mc-txt">More alarms is not automatically better — too many trigger conditions cause alarm fatigue, where users start ignoring alerts entirely. This project deliberately limits the alarm to one critical condition (air quality), keeping it meaningful. Real systems carefully choose which conditions actually warrant an alert.</p></div>
+    </div>
+    <div class="mc-card">
+      <div class="mc-w"><p class="mc-lbl">✗ Misconception</p><p class="mc-txt">"Reusing readAirQuality() from the previous topic means I'm not really learning anything new."</p></div>
+      <div class="mc-r"><p class="mc-lbl" style="color:var(--color-text-success)">✓ Reality</p><p class="mc-txt">Reusing a well-tested function is exactly how real embedded engineers build larger systems — verified building blocks get assembled into bigger projects rather than rewritten from scratch each time. The new skill here is the screen-cycling architecture and decoupled alarm logic, not the sensor reading itself.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+let currentScreen = 0;
+function buildRow(id, text) {
+  const row = document.getElementById(id);
+  row.innerHTML = '';
+  const p = text.padEnd(16,' ').slice(0,16);
+  for(let i=0;i<16;i++){
+    const c=document.createElement('div');
+    c.className='lcc'+(p[i]!==' '?' lit':'');
+    c.textContent=p[i];
+    row.appendChild(c);
+  }
+}
+function updateSim() {
+  const t = parseInt(document.getElementById('tslider').value);
+  const h = parseInt(document.getElementById('hslider').value);
+  const a = parseInt(document.getElementById('aslider').value);
+  document.getElementById('tshow').textContent = t + ' °C';
+  document.getElementById('hshow').textContent = h + ' %';
+  document.getElementById('ashow').textContent = a + ' %';
+  renderScreen(t, h, a);
+  updateBuzzer(a);
+}
+function renderScreen(t, h, a) {
+  if (currentScreen === 0) {
+    buildRow('lrow0', 'Temp: ' + t.toFixed(1) + ' C');
+    buildRow('lrow1', 'Humid: ' + h.toFixed(1) + ' %');
+    document.getElementById('screen-label').textContent = 'Currently showing: Climate screen';
+  } else {
+    buildRow('lrow0', 'Air Quality: ' + a + '%');
+    buildRow('lrow1', 'Status: ' + (a < 40 ? 'POOR' : 'GOOD'));
+    document.getElementById('screen-label').textContent = 'Currently showing: Air quality screen';
+  }
+}
+function nextScreen() {
+  currentScreen = 1 - currentScreen;
+  const t = parseInt(document.getElementById('tslider').value);
+  const h = parseInt(document.getElementById('hslider').value);
+  const a = parseInt(document.getElementById('aslider').value);
+  renderScreen(t, h, a);
+}
+function updateBuzzer(a) {
+  const led = document.getElementById('buzz-led');
+  const icon = document.getElementById('buzz-icon');
+  const state = document.getElementById('buzz-state');
+  if (a < 40) {
+    led.style.background = '#E24B4A'; led.style.borderColor = '#A32D2D';
+    icon.style.color = '#fff';
+    state.textContent = 'Air quality POOR (' + a + '%) — buzzer ON';
+    state.style.color = 'var(--color-text-danger)';
+  } else {
+    led.style.background = 'var(--color-background-tertiary)'; led.style.borderColor = 'var(--color-border-tertiary)';
+    icon.style.color = 'var(--color-text-tertiary)';
+    state.textContent = 'Air quality OK — buzzer silent';
+    state.style.color = 'var(--color-text-secondary)';
+  }
+}
+updateSim();
+</script>
