@@ -1,0 +1,101 @@
+
+<style>
+.w{padding:1.5rem 0}.badge{display:inline-block;font-size:12px;padding:4px 12px;border-radius:var(--border-radius-md);margin-bottom:1rem;background:var(--color-background-success);color:var(--color-text-success)}.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);margin-bottom:1rem}h1{font-size:22px;font-weight:500;margin:0 0 .4rem;color:var(--color-text-primary)}.sub{font-size:15px;color:var(--color-text-secondary);margin:0 0 1.5rem;line-height:1.6}hr{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0}.lbl{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin:0 0 10px}.sim{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem}
+.phone-frame{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:14px;margin-bottom:1rem;max-width:320px}
+.phone-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;color:var(--color-text-secondary)}
+.input-row{display:flex;gap:8px;margin-bottom:1rem}
+.input-row input{flex:1}
+.lcd-frame{background:#1a3a2a;border-radius:8px;padding:10px 14px;margin-bottom:1rem}
+.lcd-screen{background:#2a6a50;border-radius:4px;padding:7px 10px;font-family:monospace}
+.lcd-row{display:flex;gap:2px;margin-bottom:3px}
+.lcd-row:last-child{margin-bottom:0}
+.lcc{width:19px;height:22px;background:#2a5a44;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#3a7a6a;font-family:monospace;transition:color .15s}
+.lcc.lit{color:#c0fce8}
+.preset-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.mc-list{display:flex;flex-direction:column;gap:10px}.mc-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}.mc-w{background:var(--color-background-danger);padding:.75rem 1rem;font-size:13px;color:var(--color-text-danger)}.mc-r{background:var(--color-background-secondary);padding:.75rem 1rem;font-size:13px;color:var(--color-text-primary);line-height:1.5}.mc-lbl{font-size:11px;font-weight:500;margin:0 0 3px}.mc-txt{margin:0;line-height:1.5}
+</style>
+<div class="w">
+  <span class="badge">Section 5 — Sense making</span>
+  <div class="pill"><i class="ti ti-clock" aria-hidden="true" style="font-size:13px"></i>10 mins</div>
+  <h1>Send a notice from the virtual phone — watch it land on the LCD</h1>
+  <p class="sub">Type a message in the phone mockup below and tap send. Watch how it appears on the virtual LCD — including what happens when a message runs past 16 characters.</p>
+  <p class="lbl">Interactive Bluetooth notice board simulator</p>
+  <div class="sim">
+    <div class="phone-frame">
+      <div class="phone-header"><i class="ti ti-bluetooth" aria-hidden="true" style="font-size:14px;color:var(--color-text-info)"></i>Serial Bluetooth Terminal — connected to HC-05</div>
+      <div class="input-row">
+        <input type="text" id="msginput" placeholder="Type your notice..." onkeydown="if(event.key==='Enter')sendNotice()">
+        <button onclick="sendNotice()">Send</button>
+      </div>
+      <div class="preset-btns">
+        <button onclick="quickSend('Staff meeting 3PM')">Short notice</button>
+        <button onclick="quickSend('Annual sports day celebration starts tomorrow')">Long notice</button>
+        <button onclick="quickSend('Library closed')">Library closed</button>
+      </div>
+    </div>
+
+    <div class="lcd-frame">
+      <div class="lcd-screen">
+        <div class="lcd-row" id="lrow0"></div>
+        <div class="lcd-row" id="lrow1"></div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--color-text-secondary);margin:0" id="truncate-note">Row 2 shows your message exactly as typed.</p>
+  </div>
+
+  <hr>
+  <p class="lbl">4 common misconceptions</p>
+  <div class="mc-list">
+    <div class="mc-card">
+      <div class="mc-w"><p class="mc-lbl">✗ Misconception</p><p class="mc-txt">"HC-05's TX should connect to Arduino's TX, since both are 'transmit' pins."</p></div>
+      <div class="mc-r"><p class="mc-lbl" style="color:var(--color-text-success)">✓ Reality</p><p class="mc-txt">A transmitter must always connect to a receiver. HC-05's TXD (its output) connects to Arduino's RX pin (its input), and HC-05's RXD (its input) connects to Arduino's TX pin (its output). Connecting TX to TX means neither device ever receives anything.</p></div>
+    </div>
+    <div class="mc-card">
+      <div class="mc-w"><p class="mc-lbl">✗ Misconception</p><p class="mc-txt">"I need to write code that counts characters and cuts the message off at 16."</p></div>
+      <div class="mc-r"><p class="mc-lbl" style="color:var(--color-text-success)">✓ Reality</p><p class="mc-txt">The LCD library already handles this — <code style="font-size:11px">lcd.print()</code> simply stops outputting characters once the cursor reaches the display's column limit. No manual truncation logic is needed in the sketch.</p></div>
+    </div>
+    <div class="mc-card">
+      <div class="mc-w"><p class="mc-lbl">✗ Misconception</p><p class="mc-txt">"This project needs a custom-built Android app to work."</p></div>
+      <div class="mc-r"><p class="mc-lbl" style="color:var(--color-text-success)">✓ Reality</p><p class="mc-txt">HC-05 is generic — any app that can open a Bluetooth serial connection and send text works, including free "Bluetooth Terminal" apps already on the Play Store. Building a custom app is an optional later upgrade, not a requirement to get the core project working.</p></div>
+    </div>
+    <div class="mc-card">
+      <div class="mc-w"><p class="mc-lbl">✗ Misconception</p><p class="mc-txt">"SoftwareSerial is basically the same as the regular Serial object, just with a different name."</p></div>
+      <div class="mc-r"><p class="mc-lbl" style="color:var(--color-text-success)">✓ Reality</p><p class="mc-txt">SoftwareSerial emulates serial communication using regular digital pins and careful timing in software, rather than using Arduino's dedicated hardware UART. It's slightly less reliable at very high baud rates, but at HC-05's standard 9600 baud, it works reliably for this kind of project.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+function buildRow(id, text) {
+  const row = document.getElementById(id);
+  row.innerHTML = '';
+  const p = text.padEnd(16,' ').slice(0,16);
+  for(let i=0;i<16;i++){
+    const c=document.createElement('div');
+    c.className='lcc'+(p[i]!==' '?' lit':'');
+    c.textContent=p[i];
+    row.appendChild(c);
+  }
+}
+function displayNotice(msg) {
+  buildRow('lrow0', 'Notice:');
+  buildRow('lrow1', msg);
+  const note = document.getElementById('truncate-note');
+  if (msg.length > 16) {
+    note.textContent = 'Message was ' + msg.length + ' characters — only the first 16 ("' + msg.slice(0,16) + '") fit on row 2.';
+  } else {
+    note.textContent = 'Row 2 shows your message exactly as typed (' + msg.length + ' characters).';
+  }
+}
+function sendNotice() {
+  const input = document.getElementById('msginput');
+  const val = input.value.trim();
+  if (!val) return;
+  displayNotice(val);
+  input.value = '';
+}
+function quickSend(msg) {
+  document.getElementById('msginput').value = msg;
+  sendNotice();
+}
+displayNotice('Waiting...');
+</script>
