@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#include <SoftwareSerial.h
+#include <SoftwareSerial.h>
 const int BT_RX = 2;   // Connected to HC-05 TX
 const int BT_TX = 3;   // Connected to HC-05 RX
 SoftwareSerial BT(BT_RX, BT_TX);
