@@ -7,10 +7,11 @@ void setup()
 }
 void loop() {
 int irValue = digitalRead(irPin); 
-  if (irValue == HIGH) 
+  if (irValue == LOW) 
   {           
     digitalWrite(buzzerPin, HIGH);  
-  } else 
+  } 
+  else 
   {                           
     digitalWrite(buzzerPin, LOW);   
   }
